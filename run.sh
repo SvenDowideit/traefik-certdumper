@@ -4,12 +4,14 @@ function dump() {
     bash dumpcerts.sh /traefik/acme.json /traefik/ssl/
     ln -f /traefik/ssl/certs/* /traefik/ssl/
     ln -f /traefik/ssl/private/* /traefik/ssl/
-    for crt_file in $(ls certs); do
-        pem_file=$(echo $crt_file | sed 's/.crt/.pem/g' | sed 's/certs/pem/g')
+    for crt_file in $(ls /traefik/ssl/certs/*); do
+        pem_file=$(echo $crt_file | sed 's/.crt/-public.pem/g' | sed 's/certs/pem/g')
+        echo "openssl x509 -inform PEM -in $crt_file > $pem_file"
         openssl x509 -inform PEM -in $crt_file > $pem_file
     done 
-    for key_file in $(ls private); do
-        pem_file=$(echo $key_file | sed 's/.key/.pem/g' | sed 's/private/pem/g')
+    for key_file in $(ls /traefik/ssl/private/*); do
+        pem_file=$(echo $key_file | sed 's/.key/-private.pem/g' | sed 's/private/pem/g')
+        echo "openssl rsa -in $key_file -text > $pem_file"
         openssl rsa -in $key_file -text > $pem_file
     done
 }
