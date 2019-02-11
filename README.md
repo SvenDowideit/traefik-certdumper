@@ -43,6 +43,8 @@ Here is a Docker Swarm stack configuration example:
       - CERTDUMPER_CONSUL_ADDR=traefik_consul:8500
     volumes:
       - traefikcerts:/traefik/ssl
+    networks:
+      - traefik
     deploy:
       mode: replicated
       replicas: 1
